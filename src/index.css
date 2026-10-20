@@ -244,6 +244,30 @@ body.lang-switching-in [class*="globeIcon"] {
   animation: globeSpin 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Exclude MovieFinder logo from language change animation completely */
+body.lang-switching-out [class*="logoWrapper"],
+body.lang-switching-out [class*="logoWrapper"] *,
+body.lang-switching-in [class*="logoWrapper"],
+body.lang-switching-in [class*="logoWrapper"] *,
+body.lang-switching-out [class*="logoLink"],
+body.lang-switching-out [class*="logoLink"] *,
+body.lang-switching-in [class*="logoLink"],
+body.lang-switching-in [class*="logoLink"] * {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Immediately activate translation overlay blur on movie details components during language change */
+body.lang-switching-out [class*="translatingOverlay"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
 @keyframes globeSpin {
   0% {
     transform: rotate(-120deg) scale(0.8);

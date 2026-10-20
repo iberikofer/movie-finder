@@ -45,10 +45,18 @@ export const Reviews: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
-  const reviewsRef = useRef(reviews);
-  reviewsRef.current = reviews;
   const prevLangRef = useRef<string>(language);
   const hasDataRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (hasDataRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   useEffect(() => {
     if (!movieId) return;

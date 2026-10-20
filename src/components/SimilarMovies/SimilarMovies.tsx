@@ -18,10 +18,18 @@ export const SimilarMovies: React.FC = () => {
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
   const location = useLocation();
   const isTv = movieId ? getMediaType(movieId) === 'tv' : false;
-  const moviesRef = useRef(movies);
-  moviesRef.current = movies;
   const prevLangRef = useRef<string>(language);
   const hasDataRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (hasDataRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   useEffect(() => {
     if (!movieId) return;

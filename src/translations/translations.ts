@@ -839,7 +839,7 @@ export const translations: TranslationDictionary = {
   // Saved Page
   'saved.title': {
     en: 'Saved Watchlist',
-    uk: 'Збережені фільми',
+    uk: 'Список перегляду',
   },
   'saved.subtitle': {
     en: 'Your personal collection of saved movies and series stored directly in your browser.',

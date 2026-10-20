@@ -41,7 +41,19 @@ export const MovieDetails: React.FC = () => {
   }, [originSource]);
 
   const selectedMovieRef = useRef<MovieDetailsType | null>(null);
-  selectedMovieRef.current = selectedMovie;
+  useEffect(() => {
+    selectedMovieRef.current = selectedMovie;
+  }, [selectedMovie]);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (selectedMovieRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   const fetchDetails = useCallback(
     async (targetMovieId?: string, typeHint?: 'movie' | 'tv', isLanguageSwitch: boolean = false) => {

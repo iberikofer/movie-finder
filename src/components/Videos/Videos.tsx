@@ -99,8 +99,16 @@ export const Videos: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
   const [isIframeLoaded, setIsIframeLoaded] = useState<boolean>(false);
-  const hasVideoRef = useRef(false);
-  hasVideoRef.current = Boolean(video || availableVideos.length > 0);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (hasDataRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   const handleSelectVideo = (selected: VideoTrailer) => {
     if (!selected || selected.key === video?.key) {

@@ -24,6 +24,17 @@
   align-items: center;
 }
 
+:global(body.lang-switching-out) .logoWrapper,
+:global(body.lang-switching-out) .logoWrapper *,
+:global(body.lang-switching-in) .logoWrapper,
+:global(body.lang-switching-in) .logoWrapper * {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
 .logoLink {
   display: inline-flex;
   align-items: center;

@@ -33,6 +33,9 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    watch: {
+      ignored: ['**/*.mp4', '**/*.webm', '**/*.mkv', '**/.ai/**', '**/dist/**'],
+    },
   },
   build: {
     outDir: 'dist',

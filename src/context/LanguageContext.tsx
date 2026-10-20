@@ -60,6 +60,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return;
       }
 
+      // Notify components immediately (0ms) so translation overlays/blurs activate instantly
+      window.dispatchEvent(new CustomEvent('language_change_start', { detail: { language: newLang } }));
+
       // Phase 1: Soft dissolve and gentle lift of current text
       document.body.classList.remove('lang-switching-in');
       document.body.classList.add('lang-switching-out');

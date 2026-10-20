@@ -12,10 +12,18 @@ export const Cast: React.FC = () => {
   const [cast, setCast] = useState<CastMember[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
-  const castRef = useRef(cast);
-  castRef.current = cast;
   const prevLangRef = useRef<string>(language);
   const hasDataRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (hasDataRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   useEffect(() => {
     if (!movieId) return;

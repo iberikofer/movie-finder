@@ -158,10 +158,18 @@ export const MovieInfo: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
-  const movieRef = useRef(movie);
-  movieRef.current = movie;
   const prevLangRef = useRef<string>(language);
   const hasDataRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleLangStart = () => {
+      if (hasDataRef.current) {
+        setIsTranslating(true);
+      }
+    };
+    window.addEventListener('language_change_start', handleLangStart);
+    return () => window.removeEventListener('language_change_start', handleLangStart);
+  }, []);
 
   useEffect(() => {
     if (!movieId) return;

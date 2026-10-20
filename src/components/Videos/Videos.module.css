@@ -261,19 +261,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(18, 4, 8, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(14, 3, 6, 0.90);
+  backdrop-filter: blur(36px) saturate(140%);
+  -webkit-backdrop-filter: blur(36px) saturate(140%);
   z-index: 25;
-  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.32s ease,
-              backdrop-filter 0.32s ease;
+  transition: opacity 0.08s cubic-bezier(0, 0, 0.2, 1),
+              visibility 0.08s ease,
+              backdrop-filter 0.08s ease;
 }
 
 .translatingActive {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition: opacity 0.06s cubic-bezier(0, 0, 0.2, 1),
+              visibility 0.06s ease,
+              backdrop-filter 0.06s ease;
 }
 
 .translatingHidden {
@@ -281,4 +284,31 @@
   visibility: hidden;
   pointer-events: none;
   backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: opacity 0.25s ease-out,
+              visibility 0.25s ease,
+              backdrop-filter 0.25s ease;
+}
+
+/* Deep, instantaneous blur on videos content while translating */
+.translatingActive ~ .trailerContainer,
+.translatingActive ~ .videoGrid,
+.translatingActive ~ * {
+  filter: blur(14px);
+  opacity: 0.55;
+  transform: scale(0.995);
+  transition: filter 0.08s cubic-bezier(0, 0, 0.2, 1),
+              opacity 0.08s cubic-bezier(0, 0, 0.2, 1),
+              transform 0.08s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.translatingHidden ~ .trailerContainer,
+.translatingHidden ~ .videoGrid,
+.translatingHidden ~ * {
+  filter: blur(0px);
+  opacity: 1;
+  transform: scale(1);
+  transition: filter 0.25s ease-out,
+              opacity 0.25s ease-out,
+              transform 0.25s ease-out;
 }
