@@ -347,18 +347,46 @@
 @media (max-width: 640px) {
   .movieGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 12px;
   }
 }
 
-@media (max-width: 400px) {
-  .movieGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+@media (max-width: 425px) {
+  .searchSection {
+    padding: 16px 12px 36px 12px;
   }
 
-  .posterWrapper {
-    aspect-ratio: 3 / 4;
+  .mainTitle {
+    font-size: 1.7rem;
+  }
+
+  .movieGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .titleWrapper {
+    padding: 10px 8px;
+    min-height: 48px;
+  }
+
+  .movieTitle {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 340px) {
+  .searchSection {
+    padding: 12px 8px 30px 8px;
+  }
+
+  .movieGrid {
+    gap: 8px;
+  }
+
+  .movieTitle {
+    font-size: 0.78rem;
   }
 }
 

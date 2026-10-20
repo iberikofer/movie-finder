@@ -735,8 +735,52 @@
   }
 }
 
-@media (max-width: 440px) {
+@media (max-width: 425px) {
+  .pageWrapper {
+    padding: 12px 10px 32px 10px;
+  }
+
+  .detailsContainer {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .posterWrapper {
+    max-width: 210px;
+  }
+
+  .movieTitle {
+    font-size: 1.5rem;
+    letter-spacing: -0.3px;
+  }
+
+  .navTile {
+    padding: 10px 6px;
+  }
+
   .navTileLabel {
     font-size: 0.78rem;
+  }
+
+  .navTileIcon {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .detailsContainer {
+    padding: 12px 8px;
+  }
+
+  .posterWrapper {
+    max-width: 180px;
+  }
+
+  .movieTitle {
+    font-size: 1.35rem;
+  }
+
+  .navTileLabel {
+    font-size: 0.72rem;
   }
 }

@@ -800,6 +800,11 @@
     gap: 10px 14px;
   }
 
+  .starSlot {
+    width: clamp(24px, 6.8vw, 32px);
+    height: clamp(24px, 6.8vw, 32px);
+  }
+
   .summaryContainer {
     flex-direction: column;
     align-items: flex-start;
@@ -815,5 +820,22 @@
     grid-template-columns: 65px 1fr 65px;
     gap: 8px;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .starSlot {
+    width: 24px;
+    height: 24px;
+  }
+
+  .tierRow {
+    grid-template-columns: 50px 1fr 48px;
+    gap: 5px;
+    font-size: 0.72rem;
+  }
+
+  .satisfactionCard {
+    padding: 12px 10px;
   }
 }

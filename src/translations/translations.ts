@@ -47,6 +47,22 @@ export const translations: TranslationDictionary = {
     en: 'Main navigation',
     uk: 'Головна навігація',
   },
+  'header.openMenu': {
+    en: 'Open menu',
+    uk: 'Відкрити меню',
+  },
+  'header.closeMenu': {
+    en: 'Close menu',
+    uk: 'Закрити меню',
+  },
+  'header.mobileNavAria': {
+    en: 'Mobile navigation',
+    uk: 'Мобільна навігація',
+  },
+  'header.quickActions': {
+    en: 'Quick Actions',
+    uk: 'Швидкі дії',
+  },
 
   // Home Page
   'home.heroTitle': {

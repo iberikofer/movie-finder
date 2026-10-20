@@ -113,12 +113,43 @@ export const Header: React.FC = () => {
     };
   }, [location.pathname, location.state, savedCount, isMovieDetails, movieOrigin, language]);
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const prevPathnameRef = useRef(location.pathname);
   useEffect(() => {
     if (prevPathnameRef.current !== location.pathname) {
       const prevPath = prevPathnameRef.current;
       const nextPath = location.pathname;
       prevPathnameRef.current = location.pathname;
+      setIsMenuOpen(false);
       if (timerRef.current) clearTimeout(timerRef.current);
       setStatus('idle');
 
@@ -210,7 +241,11 @@ export const Header: React.FC = () => {
       <header className={css.header}>
         <div className={css.headerInner}>
           <div className={css.logoWrapper}>
-            <NavLink to="/" className={css.logoLink}>
+            <NavLink
+              to="/"
+              className={css.logoLink}
+              onClick={() => setIsMenuOpen(false)}
+            >
               <span className={css.logoIcon}>🎬</span>
               <span className={css.logoText}>MovieFinder</span>
             </NavLink>
@@ -280,7 +315,7 @@ export const Header: React.FC = () => {
             />
           </nav>
 
-          <div className={css.headerActions}>
+          <div className={css.headerDesktopActions}>
             <PWAInstallPrompt />
             <LanguageToggle />
             <button
@@ -315,8 +350,118 @@ export const Header: React.FC = () => {
               </div>
             </button>
           </div>
+
+          {/* Hamburger Button for screens < 768px */}
+          <button
+            type="button"
+            className={`${css.burgerBtn} ${isMenuOpen ? css.burgerBtnOpen : ''}`}
+            onClick={() => setIsMenuOpen(prev => !prev)}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav-drawer"
+            aria-label={isMenuOpen ? t('header.closeMenu', 'Close menu') : t('header.openMenu', 'Open menu')}
+          >
+            <span className={css.burgerLine} />
+            <span className={css.burgerLine} />
+            <span className={css.burgerLine} />
+          </button>
+        </div>
+
+        {/* Mobile Navigation Drawer (attached directly below header on < 768px) */}
+        <div
+          id="mobile-nav-drawer"
+          className={`${css.mobileDrawer} ${isMenuOpen ? css.mobileDrawerOpen : ''}`}
+          aria-hidden={!isMenuOpen}
+        >
+          {/* Top Utility Bar: Language Switcher & Clear Ratings button placed BEFORE navigation */}
+          <div className={css.mobileDrawerHeader}>
+            <div className={css.mobileUtilityRow}>
+              <div className={css.mobileLangWrapper}>
+                <LanguageToggle />
+              </div>
+
+              <button
+                type="button"
+                disabled={status === 'deleted'}
+                className={`${css.mobileClearAllBtn} ${
+                  status === 'confirming' ? css.clearAllBtnConfirm : ''
+                } ${status === 'deleted' ? css.clearAllBtnDeleted : ''}`}
+                onClick={handleClearAll}
+              >
+                <span className={css.mobileTrashIcon} aria-hidden="true">
+                  {status === 'confirming' ? '⚠️' : status === 'deleted' ? '✅' : '🗑️'}
+                </span>
+                <span className={css.mobileClearAllText}>
+                  {status === 'confirming'
+                    ? t('header.confirmClearAll')
+                    : status === 'deleted'
+                    ? t('header.ratingsDeleted')
+                    : t('header.clearAllRatings')}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div className={css.mobileDrawerDivider} />
+
+          <div className={css.mobileNavLinks}>
+            <NavLink
+              to="/"
+              end
+              className={`${css.mobileNavLink} ${isHomeActive ? css.mobileActiveLink : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className={css.mobileNavIcon}>🎬</span>
+              <span className={css.mobileNavText}>{t('nav.home')}</span>
+              {isHomeActive && <span className={css.mobileActiveBadge} />}
+            </NavLink>
+            <NavLink
+              to="/movies"
+              end
+              className={`${css.mobileNavLink} ${isSearchActive ? css.mobileActiveLink : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className={css.mobileNavIcon}>🔍</span>
+              <span className={css.mobileNavText}>{t('nav.search')}</span>
+              {isSearchActive && <span className={css.mobileActiveBadge} />}
+            </NavLink>
+            <NavLink
+              to="/trending"
+              className={`${css.mobileNavLink} ${isTrendingActive ? css.mobileActiveLink : ''}`}
+              onClick={() => {
+                setIsMenuOpen(false);
+                clearPageSession('trending_session');
+                window.dispatchEvent(new CustomEvent('trending_nav_click'));
+                window.scrollTo({ top: 0, behavior: 'auto' });
+              }}
+            >
+              <span className={css.mobileNavIcon}>🔥</span>
+              <span className={css.mobileNavText}>{t('nav.trending')}</span>
+              {isTrendingActive && <span className={css.mobileActiveBadge} />}
+            </NavLink>
+            <NavLink
+              to="/saved"
+              className={`${css.mobileNavLink} ${isSavedActive ? css.mobileActiveLink : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className={css.mobileNavIcon}>🔖</span>
+              <span className={css.mobileNavText}>{t('nav.saved')}</span>
+              {savedCount > 0 && (
+                <span className={css.mobileSavedBadge}>
+                  {savedCount}
+                </span>
+              )}
+              {isSavedActive && <span className={css.mobileActiveBadge} />}
+            </NavLink>
+          </div>
         </div>
       </header>
+
+      {/* Backdrop overlay for mobile menu */}
+      <div
+        className={`${css.mobileBackdrop} ${isMenuOpen ? css.mobileBackdropOpen : ''}`}
+        onClick={() => setIsMenuOpen(false)}
+        aria-hidden="true"
+      />
 
       <main className={css.mainContent}>
         <Suspense fallback={<Loader isCentered caption={t('common.loading', 'Loading...')} />}>

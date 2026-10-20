@@ -178,7 +178,8 @@
   }
 }
 
-.headerActions {
+.headerActions,
+.headerDesktopActions {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -347,35 +348,366 @@
   animation: pageFadeSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (max-width: 640px) {
+/* Mobile Hamburger Button */
+.burgerBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.burgerBtn:hover {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: #34d399;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.burgerBtn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.burgerLine {
+  display: block;
+  width: 19px;
+  height: 2px;
+  background: #34d399;
+  border-radius: 2px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease,
+              background-color 0.2s ease;
+  transform-origin: center;
+}
+
+.burgerBtnOpen {
+  background: rgba(244, 63, 94, 0.16) !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+}
+
+.burgerBtnOpen .burgerLine {
+  background: #ff9dae;
+}
+
+.burgerBtnOpen .burgerLine:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.burgerBtnOpen .burgerLine:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.burgerBtnOpen .burgerLine:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile Drawer & Backdrop (Hidden on Desktop) */
+.mobileDrawer {
+  display: none;
+}
+
+.mobileBackdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   Responsive Navigation: Burger Menu for screens < 768px
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
   .header {
-    padding: 12px 16px;
+    padding: 10px 16px;
   }
 
   .headerInner {
+    justify-content: space-between;
     gap: 12px;
+    width: 100%;
+  }
+
+  /* Logo text is cleanly displayed on mobile & tablet alongside burger button */
+  .logoText {
+    display: inline-block;
+    font-size: 1.15rem;
+    letter-spacing: -0.3px;
+  }
+
+  .logoIcon {
+    font-size: 1.3rem;
+  }
+
+  /* Hide desktop inline navigation */
+  .navigation {
+    display: none !important;
+  }
+
+  /* Hide desktop top-bar action buttons (they are placed inside the mobile drawer) */
+  .headerDesktopActions,
+  .headerActions {
+    display: none !important;
+  }
+
+  /* Show Burger Button */
+  .burgerBtn {
+    display: inline-flex;
+  }
+
+  /* Mobile Drawer Dropdown attached directly below header */
+  .mobileDrawer {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px 20px 18px;
+    background: rgba(20, 4, 8, 0.98);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85), 0 0 24px rgba(16, 185, 129, 0.12);
+    z-index: 1001;
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.2s ease,
+                visibility 0.2s;
+  }
+
+  .mobileDrawerOpen {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* Drawer Top Header (Utility Row with Language and Clear Buttons) */
+  .mobileDrawerHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .mobileUtilityRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mobileLangWrapper {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .mobileClearAllBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(244, 63, 94, 0.14);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    color: #ff9dae;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileClearAllBtn:hover {
+    background: rgba(244, 63, 94, 0.24);
+    border-color: rgba(244, 63, 94, 0.7);
+    color: #ffffff;
+  }
+
+  .mobileTrashIcon {
+    font-size: 0.95rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .mobileClearAllText {
+    letter-spacing: 0.2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileDrawerDivider {
+    height: 1px;
+    background: rgba(254, 243, 199, 0.12);
+    margin: 4px 0 6px 0;
+  }
+
+  /* Navigation Links inside Drawer */
+  .mobileNavLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mobileNavLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobileNavLink:hover {
+    background: rgba(16, 185, 129, 0.12);
+    color: #ffffff;
+  }
+
+  .mobileActiveLink {
+    color: #ffffff !important;
+    background: rgba(16, 185, 129, 0.18) !important;
+    border-color: rgba(16, 185, 129, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+    font-weight: 700;
+  }
+
+  .mobileNavIcon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .mobileNavText {
+    flex: 1;
+    letter-spacing: -0.2px;
+  }
+
+  .mobileActiveBadge {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    margin-left: auto;
+  }
+
+  .mobileSavedBadge {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.25);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    color: #34d399;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0 6px;
+    height: 18px;
+    min-width: 18px;
+    border-radius: 9px;
+  }
+
+  /* Mobile Backdrop */
+  .mobileBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    display: block;
+  }
+
+  .mobileBackdropOpen {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+/* Phones <= 425px */
+@media (max-width: 425px) {
+  .header {
+    padding: 10px 14px;
+  }
+
+  .headerInner {
+    gap: 10px;
   }
 
   .logoText {
-    display: none;
+    font-size: 1.05rem;
   }
 
-  .navigation {
-    gap: 12px;
+  .logoIcon {
+    font-size: 1.25rem;
   }
 
-  .navLink {
-    padding: 6px 4px;
+  .mobileUtilityRow {
+    gap: 8px;
+  }
+
+  .mobileDrawer {
+    padding: 14px 14px 18px 14px;
+  }
+}
+
+/* Extra small mobile (<= 340px) */
+@media (max-width: 340px) {
+  .header {
+    padding: 8px 10px;
+  }
+
+  .logoText {
     font-size: 0.95rem;
   }
 
-  .clearAllBtn {
-    width: 32px;
-    height: 32px;
+  .burgerBtn {
+    width: 35px;
+    height: 35px;
   }
 
-  .clearTooltip {
-    font-size: 0.76rem;
-    padding: 5px 10px;
+  .mobileUtilityRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .mobileClearAllBtn {
+    width: 100%;
   }
 }

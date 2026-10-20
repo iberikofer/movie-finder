@@ -684,13 +684,45 @@
 
 @media (max-width: 480px) {
   .buttonsRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 6px;
     padding: 6px 8px;
   }
 
+  .filterButton {
+    padding: 6px 8px;
+    font-size: 0.76rem;
+  }
+
+  .genresWidePopup {
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    padding: 12px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .genrePill {
+    width: calc(50% - 4px);
+    min-width: 0;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .verticalDropdown {
+    min-width: 180px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 340px) {
+  .buttonsRow {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 5px 6px;
+  }
+
   .genrePill {
     width: 100%;
-    min-width: 0;
   }
 }

@@ -500,9 +500,17 @@
   }
 
   .statsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
+  .statCard {
+    padding: 14px 12px;
+  }
+
+  .statNumber {
+    font-size: 1.5rem;
+  }
 
   .bottomCtaInner {
     padding: 32px 18px;
@@ -539,5 +547,63 @@
     font-size: 0.82rem;
     padding-top: 8px;
     margin-top: 5px;
+  }
+}
+
+@media (max-width: 425px) {
+  .homeContainer {
+    padding: 16px 12px 48px 12px;
+    gap: 32px;
+  }
+
+  .heroTitle {
+    font-size: 1.7rem;
+    letter-spacing: -0.5px;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .bottomCtaButtons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .primaryCta,
+  .secondaryCta {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
+    font-size: 0.98rem;
+  }
+
+  .techPillGrid {
+    gap: 6px;
+  }
+
+  .techPill {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .heroTitle {
+    font-size: 1.5rem;
+  }
+
+  .statsGrid {
+    gap: 8px;
+  }
+
+  .statNumber {
+    font-size: 1.3rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
   }
 }
