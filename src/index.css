@@ -274,6 +274,32 @@ body.lang-switching-in [class*="logoLink"] * {
   transition: none !important;
 }
 
+/* Exclude resetButton from language change animation so it stays locked in place */
+body.lang-switching-out [class*="resetButton"],
+body.lang-switching-in [class*="resetButton"] {
+  animation: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+body.lang-switching-out [class*="resetButton"]:not(:hover),
+body.lang-switching-in [class*="resetButton"]:not(:hover) {
+  transform: translateY(-5px) !important;
+}
+
+body.lang-switching-out [class*="resetButton"]:hover,
+body.lang-switching-in [class*="resetButton"]:hover {
+  transform: translateY(0) !important;
+}
+
+body.lang-switching-out [class*="resetIcon"],
+body.lang-switching-in [class*="resetIcon"] {
+  animation: none !important;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
 /* Immediately activate translation overlay blur on movie details components during language change */
 body.lang-switching-out [class*="translatingOverlay"] {
   opacity: 1 !important;

@@ -420,7 +420,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   const isGenresOpen = activeDropdown === 'genres' && !isClosing;
   const isAgeOpen = activeDropdown === 'age' && !isClosing;
   const isSortOpen = activeDropdown === 'sort' && !isClosing;
-  const isAnyDropdownOpen = Boolean(activeDropdown);
+  const isAnyDropdownOpen = Boolean(activeDropdown) && !isClosing;
 
   return (
     <div

@@ -22,6 +22,7 @@ import {
   clearPageSession,
 } from '../utils/sessionStorage';
 import { useLanguage } from '../context/LanguageContext';
+import { MoviePoster } from '../components/MoviePoster/MoviePoster';
 import css from './Movies.module.css';
 
 let hasLoadedSearchOnce = false;
@@ -906,7 +907,7 @@ export const Movies: React.FC = () => {
                     }}
                   >
                     <div className={css.posterWrapper}>
-                      <img
+                      <MoviePoster
                         src={
                           movie.poster_path
                             ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`

@@ -26,6 +26,12 @@
   gap: 8px;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+}
+
 .mainTitle {
   font-size: 2.6rem;
   font-weight: 800;
@@ -186,7 +192,7 @@
   position: relative;
   background: rgba(244, 63, 94, 0.14);
   border: 1px solid rgba(244, 63, 94, 0.4);
-  color: #ff9dae;
+  color: #ffffff;
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 0.95rem;
@@ -329,13 +335,23 @@
   user-drag: none;
 }
 
+@keyframes posterShimmer {
+  0%, 100% {
+    background-color: rgba(22, 10, 14, 0.65);
+  }
+  50% {
+    background-color: rgba(42, 8, 12, 0.85);
+  }
+}
+
 .posterWrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: 13px 13px 0 0;
-  background: rgba(0, 0, 0, 0.3);
+  background-color: rgba(22, 10, 14, 0.65);
+  animation: posterShimmer 2s infinite ease-in-out;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
@@ -346,7 +362,9 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.35s ease;
+  transition: transform 0.35s ease,
+              opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -532,6 +550,10 @@
 }
 
 @media (max-width: 640px) {
+  .headerRight {
+    margin-top: 0;
+  }
+
   .movieGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

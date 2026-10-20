@@ -22,6 +22,7 @@ import {
   clearPageSession,
 } from '../utils/sessionStorage';
 import { useLanguage } from '../context/LanguageContext';
+import { MoviePoster } from '../components/MoviePoster/MoviePoster';
 import css from './Trending.module.css';
 
 export const Trending: React.FC = () => {
@@ -625,7 +626,7 @@ export const Trending: React.FC = () => {
                     }}
                   >
                     <div className={css.posterWrapper}>
-                      <img
+                      <MoviePoster
                         src={
                           movie.poster_path
                             ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`

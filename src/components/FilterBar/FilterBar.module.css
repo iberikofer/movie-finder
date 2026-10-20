@@ -96,24 +96,15 @@
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Anti-hover-jitter buffer */
-.filterButton::before {
-  content: '';
-  position: absolute;
-  inset: -4px -3px -6px -3px;
-  border-radius: inherit;
-  pointer-events: auto;
-}
-
 .filterButton:hover {
   background: rgba(16, 185, 129, 0.18);
   border-color: rgba(16, 185, 129, 0.5);
   color: #ffffff;
-  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .filterButton:active {
-  transform: translateY(0);
+  background: rgba(16, 185, 129, 0.25);
 }
 
 /* Active (non-default filter value) */
@@ -237,7 +228,6 @@
 .dropdownItem:hover {
   background: rgba(16, 185, 129, 0.2);
   color: #ffffff;
-  transform: translateX(2px);
 }
 
 .dropdownItemActive {
@@ -308,26 +298,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Invisible hit buffer spanning from the bottom border downwards */
-.resetSlot::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  bottom: -16px;
-  left: -20px;
-  right: -20px;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .resetButton {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 0;
   /* Resting / collapsed state: small compact arrow tab tucked at the bottom border */
-  width: 30px;
+  width: 46px;
   height: 18px;
   padding: 0;
   border-radius: 9px;
@@ -335,11 +316,32 @@
   border: 1px solid rgba(15, 163, 127, 0.45);
   color: #34d399;
   cursor: pointer;
-  overflow: hidden;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   transform: translateY(-5px);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              color 0.2s ease,
+              opacity 0.15s ease-out;
+  position: relative;
+}
+
+/* Anti-jitter bridge: keeps hit area continuous across the 5px vertical drop when hovered */
+.resetButton:hover::before,
+.resetButton:focus-visible::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  pointer-events: auto;
 }
 
 .resetIcon {
@@ -348,45 +350,69 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 14px;
+  height: 14px;
+  line-height: 1;
   flex-shrink: 0;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
 }
 
 .resetText {
+  display: inline-block;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.2px;
-  opacity: 0;
-  max-width: 0;
+  white-space: nowrap;
   overflow: hidden;
-  transition: opacity 0.2s ease, max-width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-4px);
+  margin: 0;
+  margin-left: 0;
+  padding: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out,
+              transform 0.2s ease-out,
+              max-width 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.04s,
+              margin-left 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.04s;
 }
 
-/* When hovered: smoothly expands and drops down below the filter bar */
-.resetSlot:hover .resetButton,
+/* When hovered directly on the button: smoothly expands flush along the bottom border */
+.resetButton:hover,
 .resetButton:focus-visible {
   width: 172px;
   height: 28px;
+  gap: 0;
   padding: 0 12px;
-  transform: translateY(6px);
+  transform: translateY(0);
+  border-radius: 0 0 10px 10px;
   background: linear-gradient(135deg, rgba(244, 63, 94, 0.3) 0%, rgba(42, 8, 12, 0.95) 100%);
   border-color: rgba(244, 63, 94, 0.7);
   color: #ffb3c0;
   box-shadow: 0 6px 18px rgba(244, 63, 94, 0.45), 0 0 12px rgba(244, 63, 94, 0.25);
+  animation: none;
 }
 
-.resetSlot:hover .resetIcon {
+.resetButton:hover .resetIcon,
+.resetButton:focus-visible .resetIcon {
   transform: rotate(-180deg);
   color: #ff9dae;
 }
 
-.resetSlot:hover .resetText {
-  opacity: 1;
+.resetButton:hover .resetText,
+.resetButton:focus-visible .resetText {
   max-width: 135px;
+  opacity: 1;
+  transform: translateX(0);
+  margin-left: 6px;
+  transition: max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1) 0.04s,
+              transform 0.26s cubic-bezier(0.16, 1, 0.3, 1) 0.04s,
+              margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .resetButton:active {
-  transform: translateY(6px) scale(0.96);
+  transform: translateY(0) scale(0.97);
 }
 
 /* Active glowing pulse when non-default filters are active */
@@ -407,8 +433,7 @@
 }
 
 /* Disabled state while any filter dropdown/popup is open */
-.resetSlotDisabled,
-.resetSlotDisabled::before {
+.resetSlotDisabled {
   pointer-events: none !important;
 }
 
@@ -419,6 +444,33 @@
   cursor: default !important;
   transform: translateY(-5px) !important;
   animation: none !important;
+  transition: opacity 0.1s ease-out !important;
+}
+
+/* Prevent language change flip/jump from displacing the reset button */
+:global(body.lang-switching-out) .resetButton,
+:global(body.lang-switching-in) .resetButton {
+  animation: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+:global(body.lang-switching-out) .resetButton:not(:hover),
+:global(body.lang-switching-in) .resetButton:not(:hover) {
+  transform: translateY(-5px) !important;
+}
+
+:global(body.lang-switching-out) .resetButton:hover,
+:global(body.lang-switching-in) .resetButton:hover {
+  transform: translateY(0) !important;
+}
+
+:global(body.lang-switching-out) .resetIcon,
+:global(body.lang-switching-in) .resetIcon {
+  animation: none !important;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
 }
 
 /* ==========================================================================
@@ -594,7 +646,7 @@
   background: rgba(16, 185, 129, 0.2);
   border-color: rgba(16, 185, 129, 0.5);
   color: #ffffff;
-  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .genrePillSelected {

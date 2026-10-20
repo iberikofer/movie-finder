@@ -11,6 +11,7 @@ import SaveMovieButton from '../components/SaveMovieButton/SaveMovieButton';
 import Loader from '../components/Loader/Loader';
 import { clearPageSession } from '../utils/sessionStorage';
 import { useLanguage } from '../context/LanguageContext';
+import { MoviePoster } from '../components/MoviePoster/MoviePoster';
 import css from './Saved.module.css';
 
 let hasLoadedSavedOnce = false;
@@ -412,23 +413,25 @@ export const Saved: React.FC = () => {
               </p>
             </div>
 
-            <button
-              ref={buttonRef}
-              type="button"
-              className={`${css.clearAllBtn} ${
-                clearStatus === 'confirming' ? css.clearAllBtnConfirm : ''
-              }`}
-              onClick={handleClear}
-              title={
-                clearStatus === 'confirming'
-                  ? t('saved.confirmClear')
-                  : t('saved.clearWatchlist')
-              }
-            >
-              {clearStatus === 'confirming'
-                ? `⚠️ ${t('saved.confirmClear')}`
-                : `🗑️ ${t('saved.clearWatchlist')}`}
-            </button>
+            <div className={css.headerRight}>
+              <button
+                ref={buttonRef}
+                type="button"
+                className={`${css.clearAllBtn} ${
+                  clearStatus === 'confirming' ? css.clearAllBtnConfirm : ''
+                }`}
+                onClick={handleClear}
+                title={
+                  clearStatus === 'confirming'
+                    ? t('saved.confirmClear')
+                    : t('saved.clearWatchlist')
+                }
+              >
+                {clearStatus === 'confirming'
+                  ? `⚠️ ${t('saved.confirmClear')}`
+                  : `🗑️ ${t('saved.clearWatchlist')}`}
+              </button>
+            </div>
           </div>
         )}
 
@@ -527,7 +530,7 @@ export const Saved: React.FC = () => {
                     }}
                   >
                     <div className={css.posterWrapper}>
-                      <img
+                      <MoviePoster
                         src={
                           movie.poster_path
                             ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
@@ -535,7 +538,6 @@ export const Saved: React.FC = () => {
                         }
                         alt={title}
                         className={css.poster}
-                        loading="lazy"
                       />
                       <MovieCardRatingBadge movieId={movie.id} />
                       <MediaTypeBadge

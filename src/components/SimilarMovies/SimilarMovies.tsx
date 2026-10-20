@@ -8,6 +8,7 @@ import Loader from '../Loader/Loader';
 import MediaTypeBadge from '../MediaTypeBadge/MediaTypeBadge';
 import AgeRatingBadge from '../AgeRatingBadge/AgeRatingBadge';
 import SaveMovieButton from '../SaveMovieButton/SaveMovieButton';
+import { MoviePoster } from '../MoviePoster/MoviePoster';
 import css from './SimilarMovies.module.css';
 
 export const SimilarMovies: React.FC = () => {
@@ -150,7 +151,7 @@ export const SimilarMovies: React.FC = () => {
                   }}
                 >
                   <div className={css.posterWrapper}>
-                    <img
+                    <MoviePoster
                       src={
                         movie.poster_path
                           ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
@@ -158,7 +159,6 @@ export const SimilarMovies: React.FC = () => {
                       }
                       alt={title}
                       className={css.poster}
-                      loading="lazy"
                     />
                     <MovieCardRatingBadge movieId={movie.id} />
                     <MediaTypeBadge mediaType={movie.media_type || (isTv ? 'tv' : 'movie')} item={movie} />
