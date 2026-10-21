@@ -1,4 +1,4 @@
-{
+﻿{
   "compilerOptions": {
     "target": "ES2020",
     "lib": [
@@ -14,12 +14,22 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src",
+    "baseUrl": ".",
+    "paths": {
+      "fetch": ["src/fetch.ts"],
+      "components/*": ["src/components/*"],
+      "context/*": ["src/context/*"],
+      "hooks/*": ["src/hooks/*"],
+      "pages/*": ["src/pages/*"],
+      "translations/*": ["src/translations/*"],
+      "types/*": ["src/types/*"],
+      "utils/*": ["src/utils/*"]
+    },
     "types": ["node", "vite/client", "vite-plugin-pwa/client"]
   },
   "include": [

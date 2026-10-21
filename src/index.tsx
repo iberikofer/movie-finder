@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from 'components/App';
@@ -25,7 +25,7 @@ root.render(
   <React.StrictMode>
     <LanguageProvider>
       <BrowserRouter
-        basename="/react-movie-finder"
+        basename={import.meta.env.BASE_URL}
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true,
