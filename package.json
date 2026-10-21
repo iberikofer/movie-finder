@@ -2,7 +2,7 @@
   "name": "react-movie-finder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://iberikofer.github.io/react-movie-finder/",
+  "homepage": "https://iberikofer.github.io/movie-finder/",
   "type": "module",
   "dependencies": {
     "react": "^18.3.1",

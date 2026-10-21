@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: process.env.VERCEL ? '/' : '/react-movie-finder/',
+  base: process.env.VERCEL ? '/' : '/movie-finder/',
   resolve: {
     alias: {
       fetch: path.resolve(__dirname, 'src/fetch.ts'),

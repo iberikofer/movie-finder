@@ -54,7 +54,7 @@ export const Header: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const isMovieDetails = /(?:^|\/react-movie-finder)\/movies\/[^/]+/.test(location.pathname);
+  const isMovieDetails = /(?:^|\/(?:movie-finder|react-movie-finder))\/movies\/[^/]+/.test(location.pathname);
   const movieOrigin = isMovieDetails
     ? (location.state?.source || sessionStorage.getItem('movie_origin_tab') || 'movies')
     : null;
@@ -153,7 +153,7 @@ export const Header: React.FC = () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       setStatus('idle');
 
-      const movieRegex = /(?:^|\/react-movie-finder)\/movies\/([^/]+)/;
+      const movieRegex = /(?:^|\/(?:movie-finder|react-movie-finder))\/movies\/([^/]+)/;
       const prevMovieMatch = prevPath.match(movieRegex);
       const nextMovieMatch = nextPath.match(movieRegex);
       const isSameMovieSubtab =
@@ -161,8 +161,8 @@ export const Header: React.FC = () => {
         nextMovieMatch &&
         prevMovieMatch[1] === nextMovieMatch[1];
 
-      const isTrending = /(?:^|\/react-movie-finder)\/trending\/?$/.test(nextPath);
-      const isMovies = /(?:^|\/react-movie-finder)\/movies\/?$/.test(nextPath);
+      const isTrending = /(?:^|\/(?:movie-finder|react-movie-finder))\/trending\/?$/.test(nextPath);
+      const isMovies = /(?:^|\/(?:movie-finder|react-movie-finder))\/movies\/?$/.test(nextPath);
       const hasSavedTrendingScroll = isTrending && hasSavedPageScroll('trending_session');
       const hasSavedMoviesScroll = isMovies && hasSavedPageScroll('movies_session');
 
