@@ -46,6 +46,18 @@ export const Header: React.FC = () => {
     opacity: 0,
   });
   const [hasTransition, setHasTransition] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolled(scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -123,13 +135,9 @@ export const Header: React.FC = () => {
     };
     if (isMenuOpen) {
       document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
 
@@ -238,7 +246,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className={css.header}>
+      <header className={`${css.header} ${isScrolled || isMenuOpen ? css.headerScrolled : ''}`}>
         <div className={css.headerInner}>
           <div className={css.logoWrapper}>
             <NavLink

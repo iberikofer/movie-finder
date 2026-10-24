@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: process.env.VERCEL ? '/' : '/movie-finder/',
+  base: '/',
   resolve: {
     alias: {
       fetch: path.resolve(__dirname, 'src/fetch.ts'),
@@ -31,7 +31,6 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3000,
     open: true,
     watch: {
       ignored: ['**/*.mp4', '**/*.webm', '**/*.mkv', '**/.ai/**', '**/dist/**'],
@@ -41,3 +40,4 @@ export default defineConfig({
     outDir: 'dist',
   },
 });
+

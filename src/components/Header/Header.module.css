@@ -1,6 +1,8 @@
 .header {
   position: sticky;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   background: rgba(42, 8, 12, 0.78);
   backdrop-filter: blur(16px);
@@ -8,6 +10,19 @@
   border-bottom: 1px solid var(--bg-card-border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   padding: 14px 24px;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    padding 0.25s ease;
+}
+
+.headerScrolled {
+  background: rgba(22, 4, 7, 0.94);
+  border-bottom: 1px solid rgba(254, 243, 199, 0.22);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(16, 185, 129, 0.08);
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .headerInner {
@@ -486,6 +501,10 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 0.2s ease,
                 visibility 0.2s;
@@ -650,6 +669,8 @@
     pointer-events: none;
     transition: opacity 0.25s ease, visibility 0.25s ease;
     display: block;
+    touch-action: none;
+    overscroll-behavior: contain;
   }
 
   .mobileBackdropOpen {
