@@ -48,6 +48,27 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
+  animation: appEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes appEntrance {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 ::selection {
