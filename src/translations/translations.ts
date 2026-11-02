@@ -1195,12 +1195,12 @@ export const translations: TranslationDictionary = {
     uk: '404',
   },
   'notFound.message': {
-    en: 'Oops, this page is not found =(',
+    en: 'Oops, this page was not found =(',
     uk: 'Ой, цю сторінку не знайдено =(',
   },
   'notFound.description': {
-    en: 'The movie or page you are looking for might have been moved or deleted.',
-    uk: 'Фільм або сторінку, яку ви шукаєте, можливо переміщено або видалено.',
+    en: 'The movie/series or page you are looking for might have been moved or deleted.',
+    uk: 'Фільм/серіал або сторінку, яку ви шукаєте, можливо переміщено або видалено.',
   },
   'notFound.goHome': {
     en: 'Go back to Home page',

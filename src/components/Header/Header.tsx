@@ -96,6 +96,20 @@ export const Header: React.FC = () => {
     }
   }, [language]);
 
+  // Dynamic Document Title based on active route and language
+  useEffect(() => {
+    const p = location.pathname;
+    if (p === '/') {
+      document.title = `Movie Finder | ${t('nav.home', 'Home')}`;
+    } else if (p.startsWith('/movies') && !isMovieDetails) {
+      document.title = `Movie Finder | ${t('nav.search', 'Search')}`;
+    } else if (p.startsWith('/trending')) {
+      document.title = `Movie Finder | ${t('nav.trending', 'Trending')}`;
+    } else if (p.startsWith('/saved')) {
+      document.title = `Movie Finder | ${t('nav.saved', 'Saved')}`;
+    }
+  }, [location.pathname, language, isMovieDetails, t]);
+
   useLayoutEffect(() => {
     const updateIndicator = () => {
       if (!navRef.current) return;

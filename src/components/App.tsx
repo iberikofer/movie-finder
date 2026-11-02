@@ -8,6 +8,7 @@ import Home from '../pages/Home';
 import Saved from '../pages/Saved';
 import Trending from '../pages/Trending';
 import Movies from '../pages/Movies';
+import NotFound from '../pages/NotFound';
 
 const MovieDetails = lazy(() => import('./MovieDetails/MovieDetails'));
 const Cast = lazy(() => import('./Cast/Cast'));
@@ -16,7 +17,6 @@ const Videos = lazy(() => import('./Videos/Videos'));
 const MovieInfo = lazy(() => import('./MovieInfo/MovieInfo'));
 const SimilarMovies = lazy(() => import('./SimilarMovies/SimilarMovies'));
 const RatingDistribution = lazy(() => import('./CriticsScore/RatingDistribution'));
-const NotFound = lazy(() => import('../pages/NotFound'));
 
 export const App: React.FC = () => {
   useEffect(() => {

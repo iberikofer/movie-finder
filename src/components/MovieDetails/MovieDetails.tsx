@@ -106,6 +106,15 @@ export const MovieDetails: React.FC = () => {
     }
   }, [movieId, explicitType, fetchDetails, language]);
 
+  useEffect(() => {
+    if (selectedMovie) {
+      const name = selectedMovie.title || selectedMovie.name;
+      if (name) {
+        document.title = `Movie Finder | ${name}`;
+      }
+    }
+  }, [selectedMovie]);
+
   const displayTitle = selectedMovie?.title || selectedMovie?.name || '';
   const isTv =
     explicitType === 'tv' ||

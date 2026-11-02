@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
 import { clearPageSession } from '../utils/sessionStorage';
 import { useLanguage } from '../context/LanguageContext';
@@ -86,21 +86,32 @@ const TECH_STACK: TechItem[] = [
   },
 ];
 
-let hasLoadedHomeOnce = false;
+export let hasLoadedHomeOnce = false;
+
+export const setHasLoadedHomeOnce = (val: boolean) => {
+  hasLoadedHomeOnce = val;
+};
 
 export const Home: React.FC = () => {
   const { language, t } = useLanguage();
-  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!hasLoadedHomeOnce);
+  const location = useLocation();
+  const shouldSkipLoader = hasLoadedHomeOnce || Boolean((location?.state as { skipLoader?: boolean } | null)?.skipLoader);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!shouldSkipLoader);
 
   useEffect(() => {
     if (!hasLoadedHomeOnce) {
+      if (shouldSkipLoader) {
+        hasLoadedHomeOnce = true;
+        setIsInitialLoading(false);
+        return;
+      }
       const timer = setTimeout(() => {
         hasLoadedHomeOnce = true;
         setIsInitialLoading(false);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [shouldSkipLoader]);
 
   if (isInitialLoading) {
     return <Loader isCentered caption={t('home.loading', 'Loading home...')} />;
