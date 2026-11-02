@@ -17,15 +17,15 @@ export const NotFound: React.FC = () => {
   useEffect(() => {
     document.title = 'Movie Finder | 404';
 
-    // 1. Initial loader plays for 1 full clapper cycle (2000ms)
+    // 1. Initial loader plays for 1000ms (reduced in half from 2000ms)
     const crossfadeTimer = setTimeout(() => {
       setInitialStage('crossfade');
-    }, 2000);
+    }, 1000);
 
     // 2. Crossfade completes smoothly, card is ready and interactive
     const readyTimer = setTimeout(() => {
       setInitialStage('ready');
-    }, 2500);
+    }, 1400);
 
     return () => {
       clearTimeout(crossfadeTimer);

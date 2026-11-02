@@ -872,7 +872,7 @@ export const Movies: React.FC = () => {
         </div>
       </form>
 
-      {isPendingDebounce || isLoading ? (
+      {displayedMovies.length === 0 && (isPendingDebounce || isLoading) ? (
         <Loader
           caption={
             queryText
@@ -882,7 +882,19 @@ export const Movies: React.FC = () => {
         />
       ) : displayedMovies.length > 0 ? (
         <>
-          <ul className={css.movieGrid}>
+          <div className={css.gridContainer}>
+            {(isPendingDebounce || isLoading) && (
+              <div className={css.gridLoaderOverlay}>
+                <Loader
+                  caption={
+                    queryText
+                      ? t('search.searchingFor', 'Searching for "{query}"...').replace('{query}', queryText)
+                      : t('search.filteringTitles', 'Loading titles matching filters...')
+                  }
+                />
+              </div>
+            )}
+            <ul className={`${css.movieGrid} ${isPendingDebounce || isLoading ? css.movieGridDimmed : ''}`}>
             {displayedMovies.map(movie => {
               const title = movie.title || movie.name;
               return (
@@ -936,6 +948,7 @@ export const Movies: React.FC = () => {
               );
             })}
           </ul>
+          </div>
 
           {page < totalPages && (
             <div className={css.loadMoreContainer}>

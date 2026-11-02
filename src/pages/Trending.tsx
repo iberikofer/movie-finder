@@ -597,11 +597,17 @@ export const Trending: React.FC = () => {
         variant="standalone"
       />
 
-      {isLoading ? (
+      {displayedMovies.length === 0 && isLoading ? (
         <Loader caption={t('trending.filtering', 'Filtering trending titles...')} />
       ) : displayedMovies.length > 0 ? (
         <>
-          <ul className={css.movieGrid}>
+          <div className={css.gridContainer}>
+            {isLoading && (
+              <div className={css.gridLoaderOverlay}>
+                <Loader caption={t('trending.filtering', 'Filtering trending titles...')} />
+              </div>
+            )}
+            <ul className={`${css.movieGrid} ${isLoading ? css.movieGridDimmed : ''}`}>
             {displayedMovies.map(movie => {
               const title = movie.title || movie.name;
               return (
@@ -655,6 +661,7 @@ export const Trending: React.FC = () => {
               );
             })}
           </ul>
+          </div>
 
           {page < totalPages && (
             <div className={css.loadMoreContainer}>

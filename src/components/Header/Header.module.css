@@ -360,7 +360,7 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
-  animation: pageFadeSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pageFadeSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Mobile Hamburger Button */
