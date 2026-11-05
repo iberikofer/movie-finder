@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect, useRef, useCallback, useMemo, FormEvent, ChangeEvent } from 'react';
-import { useSearchParams, Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
   searchMedia,
   discoverMedia,
@@ -29,12 +32,26 @@ let hasLoadedSearchOnce = false;
 
 export const Movies: React.FC = () => {
   const { t, language } = useLanguage();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname() || '';
+  const searchParams = useSearchParams();
+
+  const setSearchParams = useCallback(
+    (params: Record<string, string>) => {
+      const sp = new URLSearchParams();
+      Object.entries(params).forEach(([k, v]) => {
+        if (v) sp.set(k, v);
+      });
+      const qs = sp.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname]
+  );
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const rawGenres = searchParams.get('genres') || searchParams.get('genre') || '';
+  const rawGenres = (searchParams?.get('genres') || searchParams?.get('genre') || '') as string;
   const selectedGenres = useMemo(() => {
     if (!rawGenres.trim()) return [];
     return rawGenres
@@ -43,10 +60,10 @@ export const Movies: React.FC = () => {
       .filter(id => !isNaN(id) && id > 0);
   }, [rawGenres]);
 
-  const queryText = searchParams.get('query') || '';
-  const filterType = searchParams.get('type') || 'all';
-  const filterAge = searchParams.get('age') || 'all';
-  const sortBy = searchParams.get('sort') || 'popularity.desc';
+  const queryText = searchParams?.get('query') || '';
+  const filterType = searchParams?.get('type') || 'all';
+  const filterAge = searchParams?.get('age') || 'all';
+  const sortBy = searchParams?.get('sort') || 'popularity.desc';
 
   const filterKey = `${queryText.trim().toLowerCase()}|${rawGenres}|${filterType}|${filterAge}|${sortBy}|${language}`;
 
@@ -900,8 +917,8 @@ export const Movies: React.FC = () => {
               return (
                 <li key={movie.id} className={css.movieCard}>
                   <Link
-                    to={`/movies/${movie.id}`}
-                    state={{ from: location, mediaType: movie.media_type, source: 'movies' }}
+                    href={`/movies/${movie.id}?type=${movie.media_type || 'movie'}&source=movies`}
+
                     className={css.movieLink}
                     draggable="false"
                     onClick={e => {

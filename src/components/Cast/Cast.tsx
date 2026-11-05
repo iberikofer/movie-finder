@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import { getMovieCredits } from 'fetch';
 import { CastMember } from 'types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -7,7 +9,8 @@ import Loader from '../Loader/Loader';
 import css from './Cast.module.css';
 
 export const Cast: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const [cast, setCast] = useState<CastMember[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

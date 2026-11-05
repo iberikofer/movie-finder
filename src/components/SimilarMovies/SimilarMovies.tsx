@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
 import { getSimilarMovies, setMediaType, getMediaType } from 'fetch';
 import { MediaItem } from 'types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -12,12 +15,13 @@ import { MoviePoster } from '../MoviePoster/MoviePoster';
 import css from './SimilarMovies.module.css';
 
 export const SimilarMovies: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const [movies, setMovies] = useState<MediaItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
-  const location = useLocation();
+  const pathname = usePathname();
   const isTv = movieId ? getMediaType(movieId) === 'tv' : false;
   const prevLangRef = useRef<string>(language);
   const hasDataRef = useRef<boolean>(false);
@@ -126,15 +130,13 @@ export const SimilarMovies: React.FC = () => {
             return (
               <li key={movie.id} className={css.movieCard}>
                 <Link
-                  to={`/movies/${movie.id}${movie.media_type === 'tv' ? '?type=tv' : ''}`}
-                  state={{
-                    from: location,
-                    mediaType: movie.media_type,
-                    source: location.state?.source || sessionStorage.getItem('movie_origin_tab') || 'movies',
-                  }}
+                  href={`/movies/${movie.id}${movie.media_type === 'tv' ? '?type=tv' : ''}`}
                   className={css.movieLink}
                   draggable="false"
                   onClick={e => {
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('movie_origin_tab', 'movies');
+                    }
                     const selection = window.getSelection();
                     if (
                       selection &&

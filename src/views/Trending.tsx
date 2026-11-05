@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import Link from 'next/link';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
   getTrendingMovies,
   discoverMedia,
@@ -27,9 +30,23 @@ import css from './Trending.module.css';
 
 export const Trending: React.FC = () => {
   const { t, language } = useLanguage();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname() || '';
+  const searchParams = useSearchParams();
 
-  const rawGenres = searchParams.get('genres') || searchParams.get('genre') || '';
+  const setSearchParams = useCallback(
+    (params: Record<string, string>) => {
+      const sp = new URLSearchParams();
+      Object.entries(params).forEach(([k, v]) => {
+        if (v) sp.set(k, v);
+      });
+      const qs = sp.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname]
+  );
+
+  const rawGenres = (searchParams?.get('genres') || searchParams?.get('genre') || '') as string;
   const selectedGenres = useMemo(() => {
     if (!rawGenres.trim()) return [];
     return rawGenres
@@ -38,9 +55,9 @@ export const Trending: React.FC = () => {
       .filter(id => !isNaN(id) && id > 0);
   }, [rawGenres]);
 
-  const filterType = searchParams.get('type') || 'all';
-  const filterAge = searchParams.get('age') || 'all';
-  const sortBy = searchParams.get('sort') || 'popularity.desc';
+  const filterType = searchParams?.get('type') || 'all';
+  const filterAge = searchParams?.get('age') || 'all';
+  const sortBy = searchParams?.get('sort') || 'popularity.desc';
 
   const hasActiveFilters =
     filterType !== 'all' ||
@@ -84,7 +101,7 @@ export const Trending: React.FC = () => {
     () => !restoredSessionRef.current
   );
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-  const location = useLocation();
+
   const lastLoadedFilterKeyRef = useRef<string | null>(
     restoredSessionRef.current ? filterKey : null
   );
@@ -613,8 +630,8 @@ export const Trending: React.FC = () => {
               return (
                 <li key={movie.id} className={css.movieCard}>
                   <Link
-                    to={`/movies/${movie.id}`}
-                    state={{ from: location, mediaType: movie.media_type, source: 'trending' }}
+                    href={`/movies/${movie.id}?type=${movie.media_type || 'movie'}&source=trending`}
+
                     className={css.movieLink}
                     draggable="false"
                     onClick={e => {

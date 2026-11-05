@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import StarIcon from './StarIcon';
 import { useLanguage } from '../../context/LanguageContext';
 import css from './CriticsScore.module.css';
@@ -41,7 +43,7 @@ export const ScoreSummary: React.FC<ScoreSummaryProps> = ({
     <div className={isRow ? css.summaryRow : css.summaryContainer}>
       {ratingLink ? (
         <Link
-          to={ratingLink}
+          href={ratingLink}
           className={isRow ? css.sourceLinkCritics : css.summaryLabel}
           onClick={handleScrollToSubnav}
           title={t('movie.viewCriticsRating', 'View Critics Rating breakdown ↗')}

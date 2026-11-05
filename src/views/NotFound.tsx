@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '../context/LanguageContext';
 import ClapperboardLoader from '../components/Loader/ClapperboardLoader';
 import { setHasLoadedHomeOnce } from './Home';
@@ -10,7 +12,7 @@ type ExitStage = 'idle' | 'fadingOut' | 'loaderVisible';
 
 export const NotFound: React.FC = () => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [initialStage, setInitialStage] = useState<InitialStage>('loading');
   const [exitStage, setExitStage] = useState<ExitStage>('idle');
 
@@ -47,7 +49,7 @@ export const NotFound: React.FC = () => {
       // Allow the home loader to complete its smooth snap cycle before navigating
       setTimeout(() => {
         setHasLoadedHomeOnce(true);
-        navigate('/', { state: { skipLoader: true } });
+        router.push('/');
       }, 1300);
     }, 150);
   };

@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '../../context/LanguageContext';
 import css from './ClapperboardLoader.module.css';
 
@@ -54,8 +56,8 @@ export const ClapperboardLoader: React.FC<ClapperboardLoaderProps> = ({
   title,
 }) => {
   const { t } = useLanguage();
-  const location = useLocation();
-  const displayLabel = deriveLoaderLabel(label || title, caption, location?.pathname);
+  const pathname = usePathname();
+  const displayLabel = deriveLoaderLabel(label || title, caption, pathname || '');
 
   return (
     <div

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import { getMovieVideos } from 'fetch';
 import { VideoTrailer } from 'types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -92,7 +94,8 @@ export const formatVideoTitle = (
 };
 
 export const Videos: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const [video, setVideo] = useState<VideoTrailer | null>(null);
   const [availableVideos, setAvailableVideos] = useState<VideoTrailer[]>([]);

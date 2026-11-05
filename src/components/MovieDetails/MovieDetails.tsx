@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
-import { useParams, useLocation, useSearchParams, Link, NavLink, Outlet } from 'react-router-dom';
+'use client';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getMovieDetails, setMediaType } from 'fetch';
 import { MovieDetails as MovieDetailsType } from 'types';
 import CriticsScore from '../CriticsScore/CriticsScore';
@@ -11,28 +14,34 @@ import MovieGallery from './MovieGallery';
 import { useLanguage } from '../../context/LanguageContext';
 import css from './MovieDetails.module.css';
 
-export const MovieDetails: React.FC = () => {
+export const MovieDetails: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { t, language } = useLanguage();
   const [selectedMovie, setSelectedMovie] = useState<MovieDetailsType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTranslating, setIsTranslating] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
-  const { movieId } = useParams<{ movieId: string }>();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const explicitType = (searchParams.get('type') || location.state?.mediaType) as 'movie' | 'tv' | undefined;
-  const backLinkHref = location.state?.from ?? '/';
+  const params = useParams();
+  const movieId = params?.movieId as string;
+  const pathname = usePathname() || '';
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const explicitType = (searchParams?.get('type')) as 'movie' | 'tv' | undefined;
   const fetchedMovieIdRef = useRef<string | null>(null);
   const fetchedLangRef = useRef<string>(language);
 
   const originSource =
-    location.state?.source ||
-    sessionStorage.getItem('movie_origin_tab') ||
-    (backLinkHref?.pathname?.includes('trending') || String(backLinkHref).includes('trending')
-      ? 'trending'
-      : backLinkHref?.pathname?.includes('saved') || String(backLinkHref).includes('saved')
-      ? 'saved'
-      : 'movies');
+    searchParams?.get('source') ||
+    (typeof window !== 'undefined' ? sessionStorage.getItem('movie_origin_tab') : null) ||
+    'movies';
+
+  const backLinkHref = originSource === 'trending' ? '/trending' : originSource === 'saved' ? '/saved' : '/movies';
+
+  const handleGoBack = (e: React.MouseEvent) => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      e.preventDefault();
+      router.back();
+    }
+  };
 
   useEffect(() => {
     if (originSource) {
@@ -123,7 +132,7 @@ export const MovieDetails: React.FC = () => {
 
   return (
     <div className={css.pageWrapper}>
-      <Link to={backLinkHref} className={css.backBtn}>
+      <Link href={backLinkHref} onClick={handleGoBack} className={css.backBtn}>
         ☚ {t('movie.goBack')}
       </Link>
 
@@ -246,7 +255,7 @@ export const MovieDetails: React.FC = () => {
                 >
                   ↻ {t('movie.tryAgain')}
                 </button>
-                <Link to={backLinkHref} className={css.errorGoBackBtn}>
+                <Link href={backLinkHref} onClick={handleGoBack} className={css.errorGoBackBtn}>
                   ☚ {t('movie.goBack')}
                 </Link>
               </div>
@@ -340,8 +349,7 @@ export const MovieDetails: React.FC = () => {
                     selectedMovie.genres.map(genre => (
                       <Link
                         key={genre.id}
-                        to={`/movies?genres=${genre.id}`}
-                        state={{ from: location }}
+                        href={`/movies?genres=${genre.id}`}
                         className={css.genreTag}
                         title={t('movie.browseGenre', `Browse ${genre.name} on Search`).replace('{genre}', genre.name)}
                       >
@@ -390,46 +398,27 @@ export const MovieDetails: React.FC = () => {
             <MovieGallery movieId={movieId!} movieTitle={displayTitle} />
 
             <nav id="movie-subnav" className={css.subnavGrid} aria-label={t('movie.sectionsAria', 'Movie sections')}>
-              <NavLink
-                to="rating"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+              <Link
+                href={`/movies/${movieId}/rating`}
+                scroll={false}
+                className={`${css.navTile} ${pathname.endsWith('/rating') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>★</span>
                 <span className={css.navTileLabel}>{t('movie.criticsRating')}</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
-                to="info"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+              <Link
+                href={`/movies/${movieId}/info`}
+                scroll={false}
+                className={`${css.navTile} ${pathname.endsWith('/info') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>ℹ️</span>
                 <span className={css.navTileLabel}>{isTv ? t('movie.showInfo') : t('movie.movieInfo')}</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
-                to="videos"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
+              <Link
+                href={`/movies/${movieId}/videos`}
+                scroll={false}
                 onClick={() => {
                   if (movieId) {
                     sessionStorage.removeItem(`video_selected_key_${movieId}`);
@@ -437,68 +426,43 @@ export const MovieDetails: React.FC = () => {
                     window.dispatchEvent(new CustomEvent('videos_tab_click', { detail: { movieId } }));
                   }
                 }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+                className={`${css.navTile} ${pathname.endsWith('/videos') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>▶</span>
                 <span className={css.navTileLabel}>{t('movie.officialTrailer')}</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
-                to="cast"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+              <Link
+                href={`/movies/${movieId}/cast`}
+                scroll={false}
+                className={`${css.navTile} ${pathname.endsWith('/cast') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>👥</span>
                 <span className={css.navTileLabel}>{t('movie.castAndCrew')}</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
-                to="reviews"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+              <Link
+                href={`/movies/${movieId}/reviews`}
+                scroll={false}
+                className={`${css.navTile} ${pathname.endsWith('/reviews') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>💬</span>
                 <span className={css.navTileLabel}>{t('movie.communityReviews')}</span>
-              </NavLink>
+              </Link>
 
-              <NavLink
-                to="similar"
-                preventScrollReset={true}
-                state={{
-                  from: backLinkHref,
-                  mediaType: selectedMovie?.media_type || explicitType,
-                  source: originSource,
-                }}
-                className={({ isActive }) =>
-                  `${css.navTile} ${isActive ? css.navTileActive : ''}`
-                }
+              <Link
+                href={`/movies/${movieId}/similar`}
+                scroll={false}
+                className={`${css.navTile} ${pathname.endsWith('/similar') ? css.navTileActive : ''}`}
               >
                 <span className={css.navTileIcon}>🎯</span>
                 <span className={css.navTileLabel}>{isTv ? t('movie.similarShows') : t('movie.similarMovies')}</span>
-              </NavLink>
+              </Link>
             </nav>
           </div>
 
           <div className={css.outletWrapper}>
-            <Suspense fallback={<Loader caption={t('movie.loadingSection', 'Loading section...')} />}>
-              <Outlet />
-            </Suspense>
+            {children}
           </div>
         </>
       ) : null}

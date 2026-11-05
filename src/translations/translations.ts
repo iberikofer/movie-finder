@@ -1127,6 +1127,14 @@ export const translations: TranslationDictionary = {
   },
 
   // PWA Prompt
+  'pwa.install': {
+    en: 'Install Movie Finder App',
+    uk: 'Встановити додаток Movie Finder',
+  },
+  'pwa.installApp': {
+    en: 'Install App',
+    uk: 'Встановити',
+  },
   'pwa.offlineMode': {
     en: 'Offline Mode',
     uk: 'Офлайн режим',

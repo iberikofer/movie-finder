@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import { getMovieReviews } from 'fetch';
 import { Review } from 'types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -40,7 +42,8 @@ const getSoftAccentColor = (index: number, movieId: string = ''): string => {
 };
 
 export const Reviews: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

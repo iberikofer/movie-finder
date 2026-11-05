@@ -1,63 +1,26 @@
 {
-  "name": "react-movie-finder",
-  "version": "0.1.0",
+  "name": "movie-finder",
+  "version": "1.0.0",
   "private": true,
-  "homepage": "https://iberikofer.github.io/movie-finder/",
   "type": "module",
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-loader-spinner": "^5.3.4",
-    "react-router-dom": "^6.30.6",
-    "workbox-cacheable-response": "^7.4.1",
-    "workbox-core": "^7.4.1",
-    "workbox-expiration": "^7.4.1",
-    "workbox-precaching": "^7.4.1",
-    "workbox-routing": "^7.4.1",
-    "workbox-strategies": "^7.4.1",
-    "workbox-window": "^7.4.1"
-  },
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "type-check": "tsc --noEmit",
-    "lint:js": "eslint ."
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "next": "^16.4.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "~18.19.70",
-    "@types/react": "~18.3.18",
-    "@types/react-dom": "~18.3.5",
-    "@vitejs/plugin-react": "^4.2.1",
-    "ajv": "^8.20.0",
-    "ajv-keywords": "^5.1.0",
-    "eslint": "^10.10.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.6",
-    "globals": "^17.12.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.70.0",
-    "vite": "^5.2.0",
-    "vite-plugin-pwa": "^0.19.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.20.0",
+    "eslint-config-next": "^16.4.2",
+    "typescript": "^5.9.3"
   }
 }

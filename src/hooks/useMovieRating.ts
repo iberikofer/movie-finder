@@ -45,7 +45,7 @@ const TIERS = ['5', '4.5', '4', '3.5', '3', '2.5', '2', '1.5', '1', '0.5'];
 export const getStorageKey = (movieId: string | number): string => `critics_score_${movieId}`;
 
 export const getMovieRatingData = (movieId?: string | number): MovieRatingData => {
-  if (!movieId) return { votes: { ...INITIAL_VOTES } };
+  if (!movieId || typeof window === 'undefined') return { votes: { ...INITIAL_VOTES } };
   try {
     const raw = localStorage.getItem(getStorageKey(movieId));
     if (!raw) return { votes: { ...INITIAL_VOTES } };

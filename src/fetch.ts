@@ -16,8 +16,17 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const DEFAULT_TOKEN =
   'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZWU3MDU4M2UzZTJjYzBmY2I4NjViMjQ0NTE1YWQ1MSIsInN1YiI6IjY0OTg2N2Y1OTU1YzY1MDBjN2FlZjJkYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.spmomChu1pxtxgfJXLkIEdZqVnZerBWxKn52_1eEjwg';
 
+const getTMDBToken = (): string => {
+  if (typeof process !== 'undefined' && process.env) {
+    if (process.env.NEXT_PUBLIC_TMDB_TOKEN) return process.env.NEXT_PUBLIC_TMDB_TOKEN;
+    if (process.env.VITE_TMDB_TOKEN) return process.env.VITE_TMDB_TOKEN;
+    if (process.env.REACT_APP_TMDB_TOKEN) return process.env.REACT_APP_TMDB_TOKEN;
+  }
+  return DEFAULT_TOKEN;
+};
+
 const rawRequest = async <T = any>(endpoint: string): Promise<T> => {
-  const token = import.meta.env.VITE_TMDB_TOKEN || DEFAULT_TOKEN;
+  const token = getTMDBToken();
   const options: RequestInit = {
     method: 'GET',
     headers: {
@@ -33,7 +42,7 @@ const rawRequest = async <T = any>(endpoint: string): Promise<T> => {
 };
 
 const request = async <T = any>(endpoint: string): Promise<T> => {
-  const token = import.meta.env.VITE_TMDB_TOKEN || DEFAULT_TOKEN;
+  const token = getTMDBToken();
   const options: RequestInit = {
     method: 'GET',
     headers: {

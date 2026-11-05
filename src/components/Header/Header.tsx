@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, Suspense } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+'use client';
+
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSavedMovies } from '../../hooks/useSavedMovies';
 import { hasSavedPageScroll, clearPageSession } from '../../utils/sessionStorage';
-import Loader from '../Loader/Loader';
-import PWAInstallPrompt from '../PWAInstallPrompt/PWAInstallPrompt';
 import LanguageToggle from '../LanguageToggle/LanguageToggle';
+import PWAInstallPrompt from '../PWA/PWAInstallPrompt';
 import { useLanguage } from '../../context/LanguageContext';
 import css from './Header.module.css';
 
@@ -19,7 +21,7 @@ interface IndicatorStyle {
   opacity: number;
 }
 
-export const Header: React.FC = () => {
+export const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { savedCount } = useSavedMovies();
   const { t, language } = useLanguage();
   const [animState, setAnimState] = useState<AnimState>({ key: 0, type: null });
@@ -37,7 +39,7 @@ export const Header: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'confirming' | 'deleted'>('idle');
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const location = useLocation();
+  const pathname = usePathname() || '/';
 
   const navRef = useRef<HTMLElement | null>(null);
   const [indicatorStyle, setIndicatorStyle] = useState<IndicatorStyle>({
@@ -66,21 +68,21 @@ export const Header: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const isMovieDetails = /(?:^|\/(?:movie-finder|react-movie-finder))\/movies\/[^/]+/.test(location.pathname);
+  const isMovieDetails = /(?:^|\/(?:movie-finder|react-movie-finder))\/movies\/[^/]+/.test(pathname);
   const movieOrigin = isMovieDetails
-    ? (location.state?.source || sessionStorage.getItem('movie_origin_tab') || 'movies')
+    ? (typeof window !== 'undefined' ? sessionStorage.getItem('movie_origin_tab') : 'movies')
     : null;
 
-  const isHomeActive = !isMovieDetails && location.pathname === '/';
+  const isHomeActive = !isMovieDetails && pathname === '/';
   const isSearchActive = isMovieDetails
     ? movieOrigin === 'movies'
-    : (location.pathname.startsWith('/movies') && !isMovieDetails);
+    : (pathname.startsWith('/movies') && !isMovieDetails);
   const isTrendingActive = isMovieDetails
     ? movieOrigin === 'trending'
-    : location.pathname.startsWith('/trending');
+    : pathname.startsWith('/trending');
   const isSavedActive = isMovieDetails
     ? movieOrigin === 'saved'
-    : location.pathname.startsWith('/saved');
+    : pathname.startsWith('/saved');
 
   const prevLangRef = useRef<string>(language);
   const [isLangSwitching, setIsLangSwitching] = useState<boolean>(false);
@@ -98,7 +100,7 @@ export const Header: React.FC = () => {
 
   // Dynamic Document Title based on active route and language
   useEffect(() => {
-    const p = location.pathname;
+    const p = pathname;
     if (p === '/') {
       document.title = `Movie Finder | ${t('nav.home', 'Home')}`;
     } else if (p.startsWith('/movies') && !isMovieDetails) {
@@ -108,7 +110,7 @@ export const Header: React.FC = () => {
     } else if (p.startsWith('/saved')) {
       document.title = `Movie Finder | ${t('nav.saved', 'Saved')}`;
     }
-  }, [location.pathname, language, isMovieDetails, t]);
+  }, [pathname, language, isMovieDetails, t]);
 
   useLayoutEffect(() => {
     const updateIndicator = () => {
@@ -137,7 +139,7 @@ export const Header: React.FC = () => {
     return () => {
       window.removeEventListener('resize', updateIndicator);
     };
-  }, [location.pathname, location.state, savedCount, isMovieDetails, movieOrigin, language]);
+  }, [pathname, savedCount, isMovieDetails, movieOrigin, language]);
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -165,12 +167,12 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const prevPathnameRef = useRef(location.pathname);
+  const prevPathnameRef = useRef(pathname);
   useEffect(() => {
-    if (prevPathnameRef.current !== location.pathname) {
+    if (prevPathnameRef.current !== pathname) {
       const prevPath = prevPathnameRef.current;
-      const nextPath = location.pathname;
-      prevPathnameRef.current = location.pathname;
+      const nextPath = pathname;
+      prevPathnameRef.current = pathname;
       setIsMenuOpen(false);
       if (timerRef.current) clearTimeout(timerRef.current);
       setStatus('idle');
@@ -192,7 +194,7 @@ export const Header: React.FC = () => {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     }
-  }, [location.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     if (status !== 'confirming') return;
@@ -263,14 +265,14 @@ export const Header: React.FC = () => {
       <header className={`${css.header} ${isScrolled || isMenuOpen ? css.headerScrolled : ''}`}>
         <div className={css.headerInner}>
           <div className={css.logoWrapper}>
-            <NavLink
-              to="/"
+            <Link
+              href="/"
               className={css.logoLink}
               onClick={() => setIsMenuOpen(false)}
             >
               <span className={css.logoIcon}>🎬</span>
               <span className={css.logoText}>MovieFinder</span>
-            </NavLink>
+            </Link>
           </div>
 
           <nav
@@ -278,22 +280,20 @@ export const Header: React.FC = () => {
             ref={navRef}
             aria-label={t('header.navAria', 'Main navigation')}
           >
-            <NavLink
-              to="/"
-              end
+            <Link
+              href="/"
               className={`${css.navLink} ${isHomeActive ? css.activeLink : ''}`}
             >
               {t('nav.home')}
-            </NavLink>
-            <NavLink
-              to="/movies"
-              end
+            </Link>
+            <Link
+              href="/movies"
               className={`${css.navLink} ${isSearchActive ? css.activeLink : ''}`}
             >
               {t('nav.search')}
-            </NavLink>
-            <NavLink
-              to="/trending"
+            </Link>
+            <Link
+              href="/trending"
               className={`${css.navLink} ${isTrendingActive ? css.activeLink : ''}`}
               onClick={() => {
                 clearPageSession('trending_session');
@@ -302,9 +302,9 @@ export const Header: React.FC = () => {
               }}
             >
               {t('nav.trending')}
-            </NavLink>
-            <NavLink
-              to="/saved"
+            </Link>
+            <Link
+              href="/saved"
               className={`${css.navLink} ${isSavedActive ? css.activeLink : ''}`}
             >
               <span>{t('nav.saved')}</span>
@@ -322,7 +322,7 @@ export const Header: React.FC = () => {
                   {savedCount}
                 </span>
               )}
-            </NavLink>
+            </Link>
             <span
               className={`${css.navIndicator} ${
                 hasTransition && !isLangSwitching ? css.navIndicatorTransition : ''
@@ -363,24 +363,23 @@ export const Header: React.FC = () => {
                   ? '✅'
                   : '🗑️'}
               </span>
-              <div className={css.clearTooltip} role="tooltip">
+              <span className={css.clearAllBtnText}>
                 {status === 'confirming'
                   ? t('header.confirmClearAll')
                   : status === 'deleted'
                   ? t('header.ratingsDeleted')
                   : t('header.clearAllRatings')}
-              </div>
+              </span>
             </button>
           </div>
 
-          {/* Hamburger Button for screens < 768px */}
+          {/* Mobile Hamburger Button */}
           <button
             type="button"
             className={`${css.burgerBtn} ${isMenuOpen ? css.burgerBtnOpen : ''}`}
             onClick={() => setIsMenuOpen(prev => !prev)}
+            aria-label={t('header.toggleMenu', 'Toggle navigation menu')}
             aria-expanded={isMenuOpen}
-            aria-controls="mobile-nav-drawer"
-            aria-label={isMenuOpen ? t('header.closeMenu', 'Close menu') : t('header.openMenu', 'Open menu')}
           >
             <span className={css.burgerLine} />
             <span className={css.burgerLine} />
@@ -388,29 +387,35 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation Drawer (attached directly below header on < 768px) */}
+        {/* Mobile Navigation Drawer */}
         <div
-          id="mobile-nav-drawer"
           className={`${css.mobileDrawer} ${isMenuOpen ? css.mobileDrawerOpen : ''}`}
           aria-hidden={!isMenuOpen}
         >
-          {/* Top Utility Bar: Language Switcher & Clear Ratings button placed BEFORE navigation */}
-          <div className={css.mobileDrawerHeader}>
-            <div className={css.mobileUtilityRow}>
-              <div className={css.mobileLangWrapper}>
-                <LanguageToggle />
-              </div>
-
+          <div className={css.mobileDrawerTop}>
+            <div className={css.mobileActionsGroup}>
+              <PWAInstallPrompt />
+              <LanguageToggle />
               <button
                 type="button"
                 disabled={status === 'deleted'}
                 className={`${css.mobileClearAllBtn} ${
-                  status === 'confirming' ? css.clearAllBtnConfirm : ''
-                } ${status === 'deleted' ? css.clearAllBtnDeleted : ''}`}
+                  status === 'confirming' ? css.mobileClearAllBtnConfirm : ''
+                } ${status === 'deleted' ? css.mobileClearAllBtnDeleted : ''}`}
                 onClick={handleClearAll}
+                aria-label={
+                  status === 'confirming'
+                    ? t('header.confirmClearAll')
+                    : status === 'deleted'
+                    ? t('header.ratingsDeleted')
+                    : t('header.clearAllRatings')}
               >
-                <span className={css.mobileTrashIcon} aria-hidden="true">
-                  {status === 'confirming' ? '⚠️' : status === 'deleted' ? '✅' : '🗑️'}
+                <span className={css.trashIcon} aria-hidden="true">
+                  {status === 'confirming'
+                    ? '⚠️'
+                    : status === 'deleted'
+                    ? '✅'
+                    : '🗑️'}
                 </span>
                 <span className={css.mobileClearAllText}>
                   {status === 'confirming'
@@ -426,28 +431,26 @@ export const Header: React.FC = () => {
           <div className={css.mobileDrawerDivider} />
 
           <div className={css.mobileNavLinks}>
-            <NavLink
-              to="/"
-              end
+            <Link
+              href="/"
               className={`${css.mobileNavLink} ${isHomeActive ? css.mobileActiveLink : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               <span className={css.mobileNavIcon}>🎬</span>
               <span className={css.mobileNavText}>{t('nav.home')}</span>
               {isHomeActive && <span className={css.mobileActiveBadge} />}
-            </NavLink>
-            <NavLink
-              to="/movies"
-              end
+            </Link>
+            <Link
+              href="/movies"
               className={`${css.mobileNavLink} ${isSearchActive ? css.mobileActiveLink : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               <span className={css.mobileNavIcon}>🔍</span>
               <span className={css.mobileNavText}>{t('nav.search')}</span>
               {isSearchActive && <span className={css.mobileActiveBadge} />}
-            </NavLink>
-            <NavLink
-              to="/trending"
+            </Link>
+            <Link
+              href="/trending"
               className={`${css.mobileNavLink} ${isTrendingActive ? css.mobileActiveLink : ''}`}
               onClick={() => {
                 setIsMenuOpen(false);
@@ -459,9 +462,9 @@ export const Header: React.FC = () => {
               <span className={css.mobileNavIcon}>🔥</span>
               <span className={css.mobileNavText}>{t('nav.trending')}</span>
               {isTrendingActive && <span className={css.mobileActiveBadge} />}
-            </NavLink>
-            <NavLink
-              to="/saved"
+            </Link>
+            <Link
+              href="/saved"
               className={`${css.mobileNavLink} ${isSavedActive ? css.mobileActiveLink : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -473,7 +476,7 @@ export const Header: React.FC = () => {
                 </span>
               )}
               {isSavedActive && <span className={css.mobileActiveBadge} />}
-            </NavLink>
+            </Link>
           </div>
         </div>
       </header>
@@ -486,11 +489,9 @@ export const Header: React.FC = () => {
       />
 
       <main className={css.mainContent}>
-        <Suspense fallback={<Loader isCentered caption={t('common.loading', 'Loading...')} />}>
-          <div className={css.contentFadeIn}>
-            <Outlet />
-          </div>
-        </Suspense>
+        <div className={css.contentFadeIn}>
+          {children}
+        </div>
       </main>
     </>
   );

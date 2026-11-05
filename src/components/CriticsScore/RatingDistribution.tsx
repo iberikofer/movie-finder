@@ -1,12 +1,15 @@
+'use client';
+
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import useMovieRating from '../../hooks/useMovieRating';
 import { useLanguage } from '../../context/LanguageContext';
 import StarIcon from './StarIcon';
 import css from './CriticsScore.module.css';
 
 export const RatingDistribution: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const {
     averageRating,

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import { getMovieDetails, getMovieWatchProviders } from 'fetch';
 import { MovieDetails } from 'types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -151,7 +153,8 @@ const getProviderHomeUrl = (name: string = ''): string => {
 };
 
 export const MovieInfo: React.FC = () => {
-  const { movieId } = useParams<{ movieId: string }>();
+  const params = useParams();
+  const movieId = params?.movieId as string;
   const { language, t } = useLanguage();
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [providersData, setProvidersData] = useState<{ results?: Record<string, CountryWatchProviders> } | null>(null);

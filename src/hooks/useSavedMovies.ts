@@ -18,6 +18,7 @@ export interface UseSavedMoviesReturn {
 }
 
 export const getSavedMovies = (): SavedMediaItem[] => {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];

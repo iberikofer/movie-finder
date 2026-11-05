@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
 import { setMediaType, getMovieDetails, matchesAgeFilter, isAlphabeticalTitle } from 'fetch';
 import { MediaItem } from 'types';
 import { useSavedMovies, getSavedMovies, SavedMediaItem } from '../hooks/useSavedMovies';
@@ -48,7 +50,6 @@ export const Saved: React.FC = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const location = useLocation();
 
   useEffect(() => {
     const timers = removeTimersRef.current;
@@ -503,10 +504,9 @@ export const Saved: React.FC = () => {
                   }`}
                 >
                   <Link
-                    to={`/movies/${movie.id}${
-                      movie.media_type === 'tv' ? '?type=tv' : ''
+                    href={`/movies/${movie.id}${
+                      movie.media_type === 'tv' ? '?type=tv&source=saved' : '?source=saved'
                     }`}
-                    state={{ from: location, mediaType: movie.media_type, source: 'saved' }}
                     className={css.movieLink}
                     draggable="false"
                     onClick={e => {
@@ -581,13 +581,13 @@ export const Saved: React.FC = () => {
             {savedMovies.length === 0 ? (
               <div className={css.emptyActions}>
                 <Link
-                  to="/trending"
+                  href="/trending"
                   className={css.primaryCta}
                   onClick={() => clearPageSession('trending_session')}
                 >
                   <span>{t('saved.exploreTrending')}</span>
                 </Link>
-                <Link to="/movies" className={css.secondaryCta}>
+                <Link href="/movies" className={css.secondaryCta}>
                   <span>{t('saved.searchFilmTitles')}</span>
                 </Link>
               </div>

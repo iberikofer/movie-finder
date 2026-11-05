@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
 import Loader from '../components/Loader/Loader';
 import { clearPageSession } from '../utils/sessionStorage';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,18 +17,18 @@ interface TechItem {
 
 const TECH_STACK: TechItem[] = [
   {
-    name: 'React 18',
+    name: 'Next.js App Router',
+    icon: '▲',
+    url: 'https://nextjs.org/docs/app',
+    title: 'Next.js App Router Documentation',
+    titleUk: 'Офіційна документація Next.js App Router',
+  },
+  {
+    name: 'React 19',
     icon: '⚛️',
     url: 'https://react.dev/',
     title: 'React Official Documentation',
     titleUk: 'Офіційна документація React',
-  },
-  {
-    name: 'React Router v6',
-    icon: '🗺️',
-    url: 'https://reactrouter.com/',
-    title: 'React Router Documentation',
-    titleUk: 'Офіційна документація React Router',
   },
   {
     name: 'TMDB REST API',
@@ -78,11 +80,18 @@ const TECH_STACK: TechItem[] = [
     titleUk: 'Повна двомовна локалізація (UA/EN) з перемикачем у формі прапора',
   },
   {
-    name: 'PWA & Offline Cache',
+    name: 'Next.js Turbo & SSR',
+    icon: '⚡',
+    url: 'https://nextjs.org/',
+    title: 'Next.js Turbo bundler and optimized server-client hydration',
+    titleUk: 'Швидкий бандлер Next.js Turbo та оптимізована гідрація',
+  },
+  {
+    name: 'PWA & Offline Ready',
     icon: '📱',
     url: 'https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps',
-    title: 'Progressive Web App with Service Worker & offline caching',
-    titleUk: 'Progressive Web App із Service Worker та кешуванням офлайн',
+    title: 'Progressive Web App with installable standalone mode and offline shell caching',
+    titleUk: 'Progressive Web App із режимом автономного додатка та офлайн-кешуванням',
   },
 ];
 
@@ -94,24 +103,17 @@ export const setHasLoadedHomeOnce = (val: boolean) => {
 
 export const Home: React.FC = () => {
   const { language, t } = useLanguage();
-  const location = useLocation();
-  const shouldSkipLoader = hasLoadedHomeOnce || Boolean((location?.state as { skipLoader?: boolean } | null)?.skipLoader);
-  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!shouldSkipLoader);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!hasLoadedHomeOnce);
 
   useEffect(() => {
     if (!hasLoadedHomeOnce) {
-      if (shouldSkipLoader) {
-        hasLoadedHomeOnce = true;
-        setIsInitialLoading(false);
-        return;
-      }
       const timer = setTimeout(() => {
         hasLoadedHomeOnce = true;
         setIsInitialLoading(false);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [shouldSkipLoader]);
+  }, []);
 
   if (isInitialLoading) {
     return <Loader isCentered caption={t('home.loading', 'Loading home...')} />;
@@ -278,16 +280,16 @@ export const Home: React.FC = () => {
           </p>
           <div className={css.bottomCtaButtons}>
             <Link
-              to="/trending"
+              href="/trending"
               className={css.primaryCta}
               onClick={() => clearPageSession('trending_session')}
             >
               <span>{t('home.exploreTrending')}</span>
             </Link>
-            <Link to="/movies" className={css.secondaryCta}>
+            <Link href="/movies" className={css.secondaryCta}>
               <span>{t('home.searchTitles')}</span>
             </Link>
-            <Link to="/saved" className={css.secondaryCta}>
+            <Link href="/saved" className={css.secondaryCta}>
               <span>{t('home.myWatchlist')}</span>
             </Link>
           </div>

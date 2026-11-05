@@ -10,6 +10,7 @@ if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
 }
 
 const parseRoot = <T = any>(key: string): SessionRoot<T> => {
+  if (typeof window === 'undefined') return { latestFilterKey: '', states: {} };
   try {
     const raw = sessionStorage.getItem(key);
     if (!raw) return { latestFilterKey: '', states: {} };
@@ -33,6 +34,7 @@ const parseRoot = <T = any>(key: string): SessionRoot<T> => {
 };
 
 const writeRoot = (key: string, root: SessionRoot): void => {
+  if (typeof window === 'undefined') return;
   try {
     sessionStorage.setItem(key, JSON.stringify(root));
   } catch (err) {
@@ -155,7 +157,9 @@ export const clearPageSession = (key: string, filterKey?: string | null): void =
       }
       return;
     }
-    sessionStorage.removeItem(key);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(key);
+    }
   } catch (err) {
     console.warn(`Failed to clear session for "${key}":`, err);
   }
